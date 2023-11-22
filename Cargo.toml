@@ -3,10 +3,15 @@ name = "cross-udev-hwdb"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 udev = { version = "0.8.0", features = ["hwdb"] }
+
+[patch.crates-io]
+libudev-sys = { git = "https://github.com/tuna-f1sh/libudev-sys/", rev = "7a94a7bbfd6eca85ab1be6cd53d25f337fbe15db" }
+# libudev-sys = { git = "https://github.com/Emilgardis/libudev-sys", branch = "fix-cross-compilation" }
+
+[target.x86_64-unknown-linux-gnu]
+linker = "cc"
 
 [package.metadata.cross.build]
 pre-build = ["dpkg --add-architecture $CROSS_DEB_ARCH && apt-get update && apt-get install --assume-yes libusb-1.0-0-dev:$CROSS_DEB_ARCH libudev-dev:$CROSS_DEB_ARCH udev:$CROSS_DEB_ARCH"]
